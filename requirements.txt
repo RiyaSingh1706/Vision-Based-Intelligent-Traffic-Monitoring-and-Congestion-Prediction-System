@@ -9,3 +9,10 @@ pandas       # To save traffic data into Excel/CSV tables
 
 # Dashboard (For Member 3)
 streamlit    # To build the web website/dashboard easily
+ultralytics
+opencv-python
+numpy
+matplotlib
+torch
+torchvision
+
