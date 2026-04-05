@@ -1,18 +1,9 @@
-# Computer Vision & AI
-ultralytics  # YOLOv8: The main brain for detecting cars
-opencv-python # OpenCV: To read video files and draw on frames
-cvzone       # A helper library that makes drawing boxes/text easier
-
-# Data Handling (Math & Logic)
-numpy        # For fast math calculations
-pandas       # To save traffic data into Excel/CSV tables
-
-# Dashboard (For Member 3)
-streamlit    # To build the web website/dashboard easily
-ultralytics
-opencv-python
-numpy
-matplotlib
-torch
-torchvision
-
+ultralytics>=8.0.0
+torch>=2.0.0
+torchvision>=0.15.0
+streamlit>=1.30.0
+opencv-python>=4.8.0
+numpy>=1.24.0
+pandas>=2.0.0
+plotly>=5.15.0
+Pillow>=10.0.0
