@@ -274,12 +274,16 @@ div[data-testid="stToolbar"] { display: none !important; }
 class CongestionLSTM(nn.Module):
     def __init__(self):
         super().__init__()
-        self.lstm = nn.LSTM(2, 64, 2, batch_first=True, dropout=0.2)
-        self.fc   = nn.Sequential(nn.Linear(64,32), nn.ReLU(), nn.Linear(32,1))
+        self.lstm = nn.LSTM(2, 128, 2, batch_first=True, dropout=0.3)
+        self.fc   = nn.Sequential(
+            nn.Linear(128, 64),
+            nn.ReLU(),
+            nn.Dropout(0.2),
+            nn.Linear(64, 4)          # 4 congestion classes
+        )
     def forward(self, x):
         out, _ = self.lstm(x)
         return self.fc(out[:, -1, :])
-
 
 # ─────────────────────────────────────────────────────────────
 # AUTO-DOWNLOAD MODELS (deployment ready)
@@ -291,8 +295,8 @@ class CongestionLSTM(nn.Module):
 # 3. Deploy to Streamlit Cloud — models download automatically
 # ──────────────────────────────────────────────────────────
 
-YOLO_URL = "YOUR_YOLO_MODEL_URL_HERE"   # e.g. HuggingFace raw URL
-LSTM_URL = "YOUR_LSTM_MODEL_URL_HERE"
+YOLO_URL = "https://huggingface.co/riya17singh/trafficvision-models/resolve/main/best.pt"
+LSTM_URL = "https://huggingface.co/riya17singh/trafficvision-models/resolve/main/lstm_congestion.pt"
 
 YOLO_PATH = "models/best.pt"
 LSTM_PATH = "models/lstm_congestion.pt"
@@ -344,6 +348,7 @@ def load_models():
             pass
 
     # Load LSTM
+# Load LSTM
     if os.path.exists(LSTM_PATH):
         try:
             m = CongestionLSTM()
