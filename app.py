@@ -14,6 +14,7 @@ No manual model loading needed for deployment.
 #                capture_output=True)
 import streamlit as st
 import numpy as np
+import cv2
 import torch
 import torch.nn as nn
 import time, os, tempfile, urllib.request
@@ -291,19 +292,12 @@ class CongestionLSTM(nn.Module):
 
 # ─────────────────────────────────────────────────────────────
 # AUTO-DOWNLOAD MODELS (deployment ready)
-# ─────────────────────────────────────────────────────────────
-# ── HOW TO UPDATE FOR YOUR OWN DEPLOYMENT ──────────────────
-# 1. Upload best.pt and lstm_congestion.pt to HuggingFace Hub
-#    or any direct download URL (Google Drive with gdown, etc.)
-# 2. Replace the URLs below with your actual URLs
-# 3. Deploy to Streamlit Cloud — models download automatically
-# ──────────────────────────────────────────────────────────
 
 YOLO_URL = "https://huggingface.co/riya17singh/trafficvision-models/resolve/main/best.pt"
 LSTM_URL = "https://huggingface.co/riya17singh/trafficvision-models/resolve/main/lstm_congestion.pt"
 
-YOLO_PATH = "models/best.pt"
-LSTM_PATH = "models/lstm_congestion.pt"
+YOLO_PATH = "/tmp/best.pt"
+LSTM_PATH = "/tmp/lstm_congestion.pt"
 
 def ensure_models():
     """
@@ -311,7 +305,6 @@ def ensure_models():
     For LOCAL use: just put models in models/ folder.
     For DEPLOYMENT: set YOLO_URL and LSTM_URL above.
     """
-    os.makedirs("models", exist_ok=True)
     status = {"yolo": False, "lstm": False}
 
     # Try loading local models first
@@ -440,7 +433,6 @@ def predict_lstm(lstm, buf):
         return None
 
 def draw_on_frame(frame, count, label, color_hex, pred, fnum, fps, risk_mult):
-    import cv2
     h, w = frame.shape[:2]
     ov = frame.copy()
     cv2.rectangle(ov, (0,0), (w,58), (8,9,15), -1)
@@ -821,7 +813,6 @@ else:
 
     # ── Processing loop ───────────────────────────────────────
     if st.session_state.running:
-        import cv2
         cap     = cv2.VideoCapture(vpath)
         fps_vid = cap.get(cv2.CAP_PROP_FPS) or 25
         buf     = deque(maxlen=30)
