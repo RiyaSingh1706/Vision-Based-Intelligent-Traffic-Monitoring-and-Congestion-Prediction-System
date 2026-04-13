@@ -17,13 +17,7 @@ subprocess.run([sys.executable, "-m", "pip", "uninstall", "opencv-python", "-y"]
                capture_output=True)
 import streamlit as st
 import numpy as np
-try:
-    import cv2
-    CV2_AVAILABLE = True
-except ImportError:
-    CV2_AVAILABLE = False
-    st.error("OpenCV failed to load. Try refreshing the page.")
-    st.stop()
+import cv2
 import torch
 import torch.nn as nn
 import time, os, tempfile, urllib.request
