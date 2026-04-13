@@ -16,8 +16,7 @@ import streamlit as st
 import numpy as np
 import torch
 import torch.nn as nn
-import time, os, tempfile
-import requests
+import time, os, tempfile, urllib.request
 from collections import deque
 import plotly.graph_objects as go
 
@@ -289,19 +288,16 @@ class CongestionLSTM(nn.Module):
     def forward(self, x):
         out, _ = self.lstm(x)
         return self.fc(out[:, -1, :])
-        
+
+# ─────────────────────────────────────────────────────────────
 # AUTO-DOWNLOAD MODELS (deployment ready)
-
-def download_file(url, path):
-    r = requests.get(url, stream=True)
-
-    if r.status_code != 200:
-        raise Exception(f"Download failed: {r.status_code}")
-
-    with open(path, "wb") as f:
-        for chunk in r.iter_content(1024):
-            if chunk:
-                f.write(chunk)
+# ─────────────────────────────────────────────────────────────
+# ── HOW TO UPDATE FOR YOUR OWN DEPLOYMENT ──────────────────
+# 1. Upload best.pt and lstm_congestion.pt to HuggingFace Hub
+#    or any direct download URL (Google Drive with gdown, etc.)
+# 2. Replace the URLs below with your actual URLs
+# 3. Deploy to Streamlit Cloud — models download automatically
+# ──────────────────────────────────────────────────────────
 
 YOLO_URL = "https://huggingface.co/riya17singh/trafficvision-models/resolve/main/best.pt"
 LSTM_URL = "https://huggingface.co/riya17singh/trafficvision-models/resolve/main/lstm_congestion.pt"
@@ -324,10 +320,7 @@ def ensure_models():
     elif "YOUR_YOLO" not in YOLO_URL:
         try:
             st.info("Downloading YOLOv8 model... (~6MB)")
-            download_file(YOLO_URL, YOLO_PATH)
-
-            st.write("YOLO exists:", os.path.exists(YOLO_PATH))
-            st.write("YOLO size:", os.path.getsize(YOLO_PATH) if os.path.exists(YOLO_PATH) else "NA")
+            urllib.request.urlretrieve(YOLO_URL, YOLO_PATH)
             status["yolo"] = True
         except Exception as e:
             st.warning(f"Could not download YOLO model: {e}")
@@ -337,10 +330,7 @@ def ensure_models():
     elif "YOUR_LSTM" not in LSTM_URL:
         try:
             st.info("Downloading LSTM model... (~1MB)")
-            download_file(LSTM_URL, LSTM_PATH)
-
-            st.write("LSTM exists:", os.path.exists(LSTM_PATH))
-            st.write("LSTM size:", os.path.getsize(LSTM_PATH) if os.path.exists(LSTM_PATH) else "NA")
+            urllib.request.urlretrieve(LSTM_URL, LSTM_PATH)
             status["lstm"] = True
         except Exception as e:
             st.warning(f"Could not download LSTM model: {e}")
@@ -359,7 +349,7 @@ def load_models():
             from ultralytics import YOLO
             yolo_model = YOLO(YOLO_PATH)
         except Exception as e:
-            st.error(f"YOLO load error: {e}")
+            pass
 
     # Load LSTM
 # Load LSTM
@@ -372,7 +362,7 @@ def load_models():
                 m.load_state_dict(torch.load(LSTM_PATH, map_location="cpu"))
             lstm_model = m.eval()
         except Exception as e:
-            st.error(f"LSTM load error: {e}")
+            pass
 
     return yolo_model, lstm_model
 
