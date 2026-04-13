@@ -12,6 +12,9 @@ No manual model loading needed for deployment.
 #                capture_output=True)
 # subprocess.run([sys.executable, "-m", "pip", "install", "opencv-python-headless", "--quiet"],
 #                capture_output=True)
+import subprocess, sys
+subprocess.run([sys.executable, "-m", "pip", "uninstall", "opencv-python", "-y"],
+               capture_output=True)
 import streamlit as st
 import numpy as np
 try:
