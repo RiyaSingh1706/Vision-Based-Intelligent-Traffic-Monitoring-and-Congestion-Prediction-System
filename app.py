@@ -302,8 +302,8 @@ class CongestionLSTM(nn.Module):
 YOLO_URL = "https://huggingface.co/riya17singh/trafficvision-models/resolve/main/best.pt"
 LSTM_URL = "https://huggingface.co/riya17singh/trafficvision-models/resolve/main/lstm_congestion.pt"
 
-YOLO_PATH = "models/best.pt"
-LSTM_PATH = "models/lstm_congestion.pt"
+YOLO_PATH = "/tmp/best.pt"
+LSTM_PATH = "/tmp/lstm_congestion.pt"
 
 def ensure_models():
     """
