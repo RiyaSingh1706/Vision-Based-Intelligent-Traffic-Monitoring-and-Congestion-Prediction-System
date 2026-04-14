@@ -440,7 +440,11 @@ def predict_lstm(lstm, buf):
         return None
 
 def draw_on_frame(frame, count, label, color_hex, pred, fnum, fps, risk_mult):
-    import cv2
+    try:
+        import cv2
+        CV2_OK = True
+    except ImportError:
+        CV2_OK = False
     h, w = frame.shape[:2]
     ov = frame.copy()
     cv2.rectangle(ov, (0,0), (w,58), (8,9,15), -1)
@@ -821,7 +825,11 @@ else:
 
     # ── Processing loop ───────────────────────────────────────
     if st.session_state.running:
-        import cv2
+        try:
+            import cv2
+            CV2_OK = True
+        except ImportError:
+            CV2_OK = False
         cap     = cv2.VideoCapture(vpath)
         fps_vid = cap.get(cv2.CAP_PROP_FPS) or 25
         buf     = deque(maxlen=30)
