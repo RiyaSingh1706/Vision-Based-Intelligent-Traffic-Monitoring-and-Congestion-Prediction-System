@@ -311,7 +311,7 @@ def ensure_models():
     For LOCAL use: just put models in models/ folder.
     For DEPLOYMENT: set YOLO_URL and LSTM_URL above.
     """
-    os.makedirs("models", exist_ok=True)
+    # os.makedirs("models", exist_ok=True)
     status = {"yolo": False, "lstm": False}
 
     # Try loading local models first
